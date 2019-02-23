@@ -1,0 +1,617 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;\red16\green60\blue192;
+}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl300\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 ###########################################################################################\
+#Read in data\
+###########################################################################################\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 dataHIV = read.table("{\field{\*\fldinst{HYPERLINK "http://www.umass.edu/statdata/statdata/data/actg320.dat"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://www.umass.edu/statdata/statdata/data/actg320.dat}}")\
+names(dataHIV) = c("ID", "time", "censor", "time_d", "censor_d", "TreatmentInd", "TreatGroupInd", "CD4_Strat2", "Sex", "Race",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0"IV_Hist", "Hemophil", "KarnofScale", "CD4_Count", "Prior_ZDZ_Month", "Age")\
+##### Carcinoma Example #####\
+CarcinomaData = read.table("{\field{\*\fldinst{HYPERLINK "http://www.umass.edu/statdata/statdata/data/pharynx.dat"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://www.umass.edu/statdata/statdata/data/pharynx.dat}}")\
+names(CarcinomaData) = c("Case", "Inst", "Sex", "Treat", "Grade", "Age", "Cond", "Site", "T_Stage", "N_Stage", "Date", "Status", "Time")\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ################# Colon Cancer #################\
+#################################################\
+#{\field{\*\fldinst{HYPERLINK "https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html}}\
+colon = read.csv("{\field{\*\fldinst{HYPERLINK "https://vincentarelbundock.github.io/Rdatasets/csv/survival/colon.csv"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://vincentarelbundock.github.io/Rdatasets/csv/survival/colon.csv}}")\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ###########################################################################################\
+#Variable Correction\
+############################################################################################\
+dataHIV$censor = as.factor(dataHIV$censor)\
+levels(dataHIV$censor) = c("Death", "Otherwise")\
+dataHIV$TreatmentInd = as.factor(dataHIV$TreatmentInd)\
+levels(dataHIV$TreatmentInd) = c("Control", "WithIDV")\
+dataHIV$Sex = as.factor(dataHIV$Sex)\
+levels(dataHIV$Sex) = c("Male", "Female")\
+dataHIV$Race = as.factor(dataHIV$Race)\
+levels(dataHIV$Race) = c("White", "Black", "Hispanic", "Asian", "Native", "Other")\
+dataHIV$IV_Hist = as.factor(dataHIV$IV_Hist)\
+levels(dataHIV$IV_Hist) = c("Never", "Currently", "Previously")\
+dataHIV$Hemophil = as.factor(dataHIV$Hemophil)\
+levels(dataHIV$Hemophil) = c("No", "Yes")\
+dataHIV$KarnofScale = as.factor(dataHIV$KarnofScale)\
+############################################################################################\
+#Carcinoma \\/\
+###Fix Variables###\
+CarcinomaData$Treat = as.factor(CarcinomaData$Treat)\
+levels(CarcinomaData$Treat) = c("Standard", "Test")\
+CarcinomaData$Grade = as.factor(CarcinomaData$Grade)\
+CarcinomaData$Cond = as.factor(CarcinomaData$Cond)\
+CarcinomaData$Site = as.factor(CarcinomaData$Site)\
+CarcinomaData$T_Stage = as.factor(CarcinomaData$T_Stage)\
+CarcinomaData$N_Stage = as.factor(CarcinomaData$N_Stage)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+#Colon Cancer\
+apply(colon, 2,class)\
+head(colon)\
+colon$rx = as.factor(colon$rx)\
+\'a0 summary(colon$rx)\
+colon$obstruct = as.factor(colon$obstruct)\
+\'a0 levels(colon$obstruct) = c("NoObstruction", "Obstruction")\
+colon$perfor = as.factor(colon$perfor)\
+\'a0 levels(colon$perfor) = c("NoPerforation", "Perforation")\
+colon$adhere = as.factor(colon$adhere)\
+\'a0 levels(colon$adhere) = c("NoAdherence", "Adherence")\
+colon$differ = as.factor(colon$differ)\
+\'a0 levels(colon$differ) = c("Well", "Moderate", "Poor")\
+colon$extent = as.factor(colon$extent)\
+\'a0 levels(colon$extent) = c("Submucosa", "Muscle", "Serosa", "Contiguous")\
+colon$surg = as.factor(colon$surg)\
+\'a0 levels(colon$surg) = c("Short", "Long")\
+colon$node4 = as.factor(colon$node4)\
+\'a0 levels(colon$node4) = c("LessThan4", "MoreThan4")\
+colon$etype = as.factor(colon$etype)\
+\'a0 levels(colon$etype) = c("Recurrence", "NoRecurrence")\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 # Generate Subsets\
+############################################################################################\
+dataControl.c = subset(CarcinomaData, CarcinomaData$Treat=="Standard")\
+dataTreat.c = subset(CarcinomaData, CarcinomaData$Treat=="Test")\
+############################################################################################\
+dataControl = subset(dataHIV, dataHIV$TreatmentInd=="Control")\
+dataTreat = subset(dataHIV, dataHIV$TreatmentInd=="WithIDV")\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+#Load Packages\
+############################################################################################\
+library(shiny)\
+library(rpart)\
+library(rpart.plot)\
+library(shinydashboard)\
+library(randomForest)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+dataTreatment.Sum = dataTreat[,c(4, 8:16)] #Remove extra columns to make it "useable" in Rpart\
+dataControl.Sum = dataControl[,c(4, 8:16)] #Remove extra columns to make it "useable" in Rpart\
+allData = rbind(dataTreatment.Sum, dataControl.Sum)#Combine both data to use as prediction in the future.\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 dataTreatment.Sum.c = dataTreat.c[,c(3, 5:13)] #Remove extra columns to make it "useable" in Rpart\
+dataControl.Sum.c = dataControl.c[,c(3, 5:13)] #Remove extra columns to make it "useable" in Rpart\
+allData.c = rbind(dataTreatment.Sum.c, dataControl.Sum.c)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ###Partition by treatment\
+colon.Lev = subset(colon, colon$rx=="Lev")\
+\'a0 colon.Lev = colon.Lev[complete.cases(colon.Lev),]; nrow(colon.Lev)\
+\'a0 cov.Lev = colon.Lev[,c(5:17)] #Partition data\
+colon.Lev5FU = subset(colon, colon$rx=="Lev+5FU")\
+\'a0 colon.Lev5FU = colon.Lev5FU[complete.cases(colon.Lev5FU),]; nrow(colon.Lev5FU)\
+\'a0 cov.Lev5FU = colon.Lev5FU[,c(5:17)] #Partition data\
+colon.Control = subset(colon, colon$rx=="Obs"); nrow(colon.Control)\
+\'a0 colon.Control = colon.Control[complete.cases(colon.Control),]; nrow(colon.Control)\
+\'a0 cov.Control = colon.Control[,c(5:17)] #Partition data\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+# Create Trees\
+############################################################################################\
+dataControl_Tree = rpart(dataControl.Sum$time_d~. , data = dataControl.Sum)\
+dataTreatment_Tree = rpart(dataTreatment.Sum$time_d~. , data = dataTreatment.Sum)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 dataControl_Tree.c = rpart(dataControl.Sum.c$Time~. , data = dataControl.Sum.c)\
+dataTreatment_Tree.c = rpart(dataTreatment.Sum.c$Time~. , data = dataTreatment.Sum.c)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 levTree = rpart(colon.Lev$etype ~ ., data=colon.Lev) #One Tree\
+Lev5FUTree = rpart(colon.Lev5FU$etype ~ ., data=colon.Lev5FU) #One Tree\
+controlTree = rpart(cov.Control$etype ~ ., data=cov.Control) #One Tree\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+# Random Forest\
+############################################################################################\
+dataControl_RF.c = randomForest(dataControl.c[,c(5:12)], dataControl.c$Time, ntree= 1000) #Predict Using Control\
+dataTreat_RF.c = randomForest(dataTreat.c[,c(5:12)], dataTreat.c$Time, ntree= 1000) #Predict Using Treatment\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 dataControl_RF = randomForest(dataControl[,c(8:16)], dataControl$time_d, ntree= 1000) #Predict Using Control\
+dataTreat_RF = randomForest(dataTreat[,c(8:16)], dataTreat$time_d, ntree= 1000)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 dataControl_Lev = randomForest(colon.Lev[,c(5:15)], colon.Lev[,17], data = cov.Lev, ntree = 1000) #Predict Using Control\
+dataControl_Lev5FU = randomForest(colon.Lev5FU[,c(5:15)], colon.Lev5FU[,17], data = cov.Lev5FU, ntree = 1000) #Predict Using Control\
+dataControl_Control = randomForest(colon.Control[,c(5:15)], colon.Control[,17], data = cov.Control, ntree = 1000) #Predict Using Control\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ###Predict using\
+############################################################################################\
+# Define UI for application that draws a histogram\
+############################################################################################\
+#Session User and Warnings\
+session <- data.frame(user = "Thomas Baye")\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ############################################################################################\
+# Define Header\
+############################################################################################\
+header<-dashboardHeader(title = "Baye MD", titleWidth = 150)\
+############################################################################################\
+# Define Sidebar\
+############################################################################################\
+sidebar <- dashboardSidebar(\
+\'a0 # Custom CSS to hide the default logout panel\
+\'a0 tags$head(tags$style(HTML('.shiny-server-account \{ display: none; \}'))),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 sidebarMenu(\
+\'a0 menuItem("Introduction", tabName = "intro", icon = icon("info")),\
+\'a0 menuItem("How to Use", tabName = "how", icon = icon("tree")),\
+\'a0 menuItem("HIV", tabName = "aids", icon = icon("plus"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0menuSubItem("AIDS", icon = icon("minus"), tabName = "sub2")),\
+\'a0 menuItem("Cancer", icon = icon("plus"), tabName = "cancer",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0menuSubItem("Carcinoma Oropharynx", icon = icon("minus"), tabName = "sub1"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0menuSubItem("Colon", icon = icon("minus"), tabName = "colon")),\
+\'a0 menuItem("File Upload", icon = icon("cloud-upload"), tabName = "file"),\
+\'a0 uiOutput("userpanel")\
+)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 )\
+############################################################################################\
+# Define Body\
+############################################################################################\
+body <- dashboardBody(\
+\'a0 \'a0 \'a0 \'a0 \'a0 tabItems(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(tabName = "intro",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 # fluidRow(column(width = 5, htmlOutput("picture")),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 # \'a0 \'a0 \'a0 \'a0 \'a0column(width = 5, htmlOutput("picture1"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 # \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0htmlOutput("picture2"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 # \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0htmlOutput("picture3")))\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidPage( HTML('<center><img src= "{\field{\*\fldinst{HYPERLINK "https://c1.staticflickr.com/3/2938/32989208981_63cfd17190_k.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://c1.staticflickr.com/3/2938/32989208981_63cfd17190_k.jpg}}" width="463"></center>'))\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 #fluidPage(htmlOutput("picture") )\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 ),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(tabName = "how",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h1("How to use Decision Trees"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidPage(HTML('<center><img src= "{\field{\*\fldinst{HYPERLINK "https://c1.staticflickr.com/4/3832/32316575103_92bfc07ec8_k.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://c1.staticflickr.com/4/3832/32316575103_92bfc07ec8_k.jpg}}" width="1080"></center>')),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h2("How to Read Decision Trees"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Start at top of a tree and answer the question to yourself."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("If the answer to the statement is yes, then go to the left; else, go right."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Repeat until you reach the bottom of a branch."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h2("How to Interpret Predictions"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Ex: If there were 100 people with a certain cancer"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Expected Value: How much we can expect on average."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Outcome: 560"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Interpretation: If there were 100 people exactly like you, the average life expectancy is 560 days."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Probability: The likelihood of something happening."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Outcome: 0.05"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h3("Interpretation: If there were 100 people exactly like you, about 5 people would get cancer again."),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 HTML('<center><img src= "{\field{\*\fldinst{HYPERLINK "https://c1.staticflickr.com/4/3702/33091432056_d4f45312c4_k.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://c1.staticflickr.com/4/3702/33091432056_d4f45312c4_k.jpg}}" width="463"></center>')\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 ),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(tabName = "sub2",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tags$head(tags$style(HTML('\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 .skin-blue .main-header .logo \{\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0background-color: #3c8dbc;\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \}\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0.skin-blue .main-header .logo:hover \{\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0background-color: #3c8dbc;\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0\}\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 '))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h2("AIDS"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box(plotOutput("distTree"), width = 15)),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box( title = "Prediction",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 textOutput("text"), width = 6),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(width = 6, \'a0 helpText(a("Click here to see variable description ",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 href = "{\field{\*\fldinst{HYPERLINK "http://www.umass.edu/statdata/statdata/data/actg320.txt"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://www.umass.edu/statdata/statdata/data/actg320.txt}}")))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(numericInput("age", "Age", min = 1, value=25, max = 150,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE), \'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(selectInput("race", "Race", c("White" = "White", "Black"="Black", "Hispanic" ="Hispanic", "Asian" = "Asian",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Native" = "Native", "Other" = "Other")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(selectInput("ivhist", "Have you ever been on an IV Drug?", c("Never" = "Never",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0"Currently" = "Currently", "Previously" = "Previously")),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(selectInput("Sex", "Sex", c("Male" = "Male", "Female" = "Female"), selected = character(0)),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("karnofscale", "How severe are your symptoms?", c("Active work not possible / 70 cells per millimeter" = "70",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal activity with effort / 80 cells per millimeter" = "80",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal activity possible / 90 cells per millimeter" = "90",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal / 100 cells per millimeter" = "100")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0 numericInput("cd4_count", "Estimated CD4 Count", value = 400, min = 0, max = 400, step = 0.5),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0numericInput("prior_zdv_month", "How long have you used ZDV in months?", value = 55, min = 0, step = 1),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0radioButtons("hemophile", "Do you have a history of hemophilia (Blood does not clot)",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0c("Yes" = "Yes", "No" = "No")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0fluidRow(submitButton("Apply Changes"))\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ################\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabName = "sub1",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h2("Carcinoma"),\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tags$head(tags$style(HTML('\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 .skin-blue .main-header .logo \{\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0background-color: #3c8dbc;\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \}\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 .skin-blue .main-header .logo:hover \{\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 background-color: #3c8dbc;\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \}\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 '))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box(plotOutput("distTree.c"), width = 15)),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box( title = "Prediction",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 textOutput("text.c"), width = 6),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(width = 6, \'a0 helpText(a("Click here to see variable description ",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 href = "{\field{\*\fldinst{HYPERLINK "http://www.umass.edu/statdata/statdata/data/pharynx.txt"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://www.umass.edu/statdata/statdata/data/pharynx.txt}}")))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(numericInput("age.c", "Age", min = 1, value=25, max = 150,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(selectInput("sex.c", "Sex", c("Male" = 1, "Female"= 2), selected =character((0))),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("grade.c", "Grade", c("Well Differentiated" = "1", "Moderately Differentiated"="2", "Poorly Differentiated" ="3",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Prefer not to answer" = "9")),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(numericInput("age.d.c", "How long have you been diagnosed?", min = 1, value=25, max = 150,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(selectInput("site.c", "What is the site of occurrance?", c("Faucial Arch" = "1",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0"Tonsillar Fossa" = "2", "Posterior Pillar" = "3"\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0, "Pharyngeal Tongue" = "4", "Posterior Wall" = "5")),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("condition.c", "How servere are your symptoms?", c("Active work not possible" = "4",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal activity with effort" = "3",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal activity possible " = "2",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Normal" = "1",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Prefer not to answer" = "9")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0selectInput("t_stage.c", "How large is the cancer?", c("2 cm or less in largest diameter" = "1",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "2 cm to 4 cm in largest diameter" = "2", "more than 4 cm" = "3"\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 , "massive invasive tumor" = "4")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0selectInput("n_stage.c", "How large is the cancer?", c("2 cm or less in largest diameter" = "1",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "2 cm to 4 cm in largest diameter" = "2", "more than 4 cm" = "3"\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 , "massive invasive tumor" = "4")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(numericInput("date.c", "How long have you had cancer (in days)?", min = 1, value=60, max = 150,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE)\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(submitButton("Apply Changes"))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(tabName = "colon",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 h2("Colon Cancer"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box(plotOutput("distTree.colon"), width = 15)),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(box( title = "Prediction",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 textOutput("text.colon"), width = 6),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(width = 6, \'a0 helpText(a("Click here to see variable description ",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 href = "{\field{\*\fldinst{HYPERLINK "https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://vincentarelbundock.github.io/Rdatasets/doc/survival/colon.html}}")))),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 #################\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fluidRow(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(numericInput("age", "Age", min = 1, value=25, max = 150,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("sex", "Sex", c("Male" = 1, "Female"= 0)),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("obstruct", "Obstruction of colon by tumor", c("No Obstruction of colon by tumor" = "NoObstruction",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Obstruction of colon by tumor"="Obstruction")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(radioButtons("perfor", "Perforation of Colon", c("No Perforation" = "NoPerforation",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Perforation" = "Perforation")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(radioButtons("adhere", "Is the tumor close to your organs?", c("No" = "NoAdherence",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Yes" = "Adherence")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(numericInput("nodes", "Number of lymph nodes", min = 1, value=25, max = 50,step = 1),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0selectInput("differ", "Differentition of Tumor", c("Well" = "Well",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Moderate" = "Moderate", "Poor" = "Poor")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box( \'a0selectInput("extent", "Extent of local Spread", c("Submucosa" = "Submucosa",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 "Muscle" = "Muscle", "Serosa" = "Serosa",\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0"Contiguous structures" = "Contiguous")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(radioButtons("surg", "Time from surgery to registration", c("Short" = "Short", "Long" = "Long")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0box(radioButtons("node4", "Do you have more than 4 positive lymph nodes?", c("No" = "LessThan4", "Yes" = "MoreThan4")),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0width = 3, solidHeader = TRUE)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 #################\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 ),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabItem(\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tabName = "file",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 box(title = "File Upload",\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 fileInput('file1', 'Choose CSV File',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 accept=c('text/csv',\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0'text/comma-separated-values,text/plain',\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0'.csv')),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tags$hr(),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 checkboxInput('header', 'Header', TRUE),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 radioButtons('sep', 'Separator',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0c(Comma=',',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Semicolon=';',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Tab='\\t'),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0','),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 radioButtons('quote', 'Quote',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0c(None='',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0'Double Quote'='"',\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0'Single Quote'="'"),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0'"'), solidHeader = TRUE)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 ),\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 tableOutput('contents')\
+\'a0 \'a0 \'a0 \'a0 \'a0 )\
+)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ui <- dashboardPage(header, sidebar, body)\
+############################################################################################\
+# Define server logic required to draw Trees\
+############################################################################################\
+server <- function(input, output) \{\
+\'a0\'a0\
+\'a0 output$distTree <- renderPlot(\{\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 #Plot both options next to teach other\
+\'a0 \'a0 par(mfrow=c(1,2))\
+\'a0 \'a0 rpart.plot(dataControl_Tree, main = "Decision Tree with Placebo")\
+\'a0 \'a0 rpart.plot(dataTreatment_Tree, main = "Decision Tree with Indinavir")\
+\'a0 \'a0 par(mfrow=c(1,1))\
+\'a0 \})\
+output$distTree.c <- renderPlot(\{\
+\'a0 #Predict and plot for control\
+\'a0 # \'a0 \'a0rpart.plot(dataControl_Tree, main = "Decision Tree with Control")\
+\'a0\'a0\
+\'a0 #Predict and plot for treatment\
+\'a0 # \'a0 \'a0rpart.plot(dataTreatment_Tree, main = "Decision Tree with Treatment")\
+\'a0\'a0\
+\'a0 #Plot both options next to teach other\
+\'a0 par(mfrow=c(1,2))\
+\'a0 rpart.plot(dataControl_Tree.c, main = "Decision Tree with Radiation Alone")\
+\'a0 rpart.plot(dataTreatment_Tree.c, main = "Decision Tree with Radiation with Chemo")\
+\'a0 par(mfrow=c(1,1))\
+\}) \'a0\
+\'a0 output$distTree.colon <- renderPlot(\{\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 #Plot both options next to teach other\
+\'a0 \'a0 par(mfrow=c(1,3))\
+\'a0 \'a0 rpart.plot(levTree, main="Levamisole Treatment") #Plot\
+\'a0 \'a0 rpart.plot(Lev5FUTree, main="Levamisole+5-FU Treatment") #Plot\
+\'a0 \'a0 rpart.plot(controlTree, \'a0main= "Control") #Plot\
+\'a0 \'a0 par(mfrow=c(1,1))\
+\'a0 \})\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0output$text <- renderText(\{\
+\'a0 \'a0 \'a0cd4 <- ifelse(input$cd4_count <= 50, 0, 1)\
+\'a0 \'a0 \'a0newdata <- dataControl.Sum[1,-1]\
+# \'a0 newdata <- data.frame(CD4_Strat2 = cd4, Sex = input$sex, Race = input$race, IV_Hist = input$ivhist, \'a0\
+# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 Hemophil = input$hemophile,\
+\'a0# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0KarnofScale = input$karnofscale, CD4_Count = input$cd4_count,\
+\'a0# \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Prior_ZDZ_Month = input$prior_zdv_month, Age = input$age)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0newdata[1,1] <- cd4\
+\'a0 \'a0 \'a0newdata[1,2] <- input$Sex\'a0\
+\'a0 \'a0 \'a0newdata[1,3] <- input$race\'a0\
+\'a0 \'a0 \'a0newdata[1,4] <- input$ivhist \'a0\
+\'a0 \'a0 \'a0newdata[1,5] <- input$hemophile\
+\'a0 \'a0 \'a0newdata[1,6] <- input$karnofscale\'a0\
+\'a0 \'a0 \'a0newdata[1,7] <- input$cd4_count\
+\'a0 \'a0 \'a0newdata[1,8] <- input$prior_zdv_month\'a0\
+\'a0 \'a0 \'a0newdata[1,9] <- input$age\
+#\'a0\
+\'a0 \'a0 \'a0newPredictionsControl = predict(dataControl_RF, newdata) #Predict Using Control\
+\'a0 \'a0 \'a0newPredictionsTreat = predict(dataTreat_RF, newdata) #Predict Using Treatment\
+\'a0 \'a0 \'a0\
+\'a0 \'a0 \'a0newPredictionsInfo = ifelse(newPredictionsControl>newPredictionsTreat, "Placebo", "Indinavir")\
+\'a0 \'a0 \'a0paste("Your Predicted Treatment is:", newPredictionsInfo)\
+\'a0 \'a0\})\
+###\
+output$text.c <- renderText(\{\
+\'a0 newdata.c <- dataControl.Sum.c[1,-10]\
+\'a0 # \'a0 newdata <- data.frame(CD4_Strat2 = cd4, Sex = input$sex, Race = input$race, IV_Hist = input$ivhist, \'a0\
+\'a0 # \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 Hemophil = input$hemophile,\
+\'a0 # \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 KarnofScale = input$karnofscale, CD4_Count = input$cd4_count,\
+\'a0 # \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 Prior_ZDZ_Month = input$prior_zdv_month, Age = input$age)\
+\'a0 # \'a0 \'a0\'a0\
+\'a0 newdata.c[1,1] <- input$sex.c\'a0\
+\'a0 newdata.c[1,2] <- input$grade.c\
+\'a0 newdata.c[1,3] <- input$age.c\
+\'a0 newdata.c[1,4] <- input$condition.c\
+\'a0 newdata.c[1,5] <- input$site.c\
+\'a0 newdata.c[1,6] <- input$t_stage.c\
+\'a0 newdata.c[1,7] <- input$n_stage.c\
+\'a0 newdata.c[1,8] <- input$date.c\
+\'a0 newdata.c[1,9] <- as.integer(0)\
+\'a0\'a0\
+\'a0 newPredictionsControl.c = predict(dataControl_RF.c, newdata.c) #Predict Using Control\
+\'a0 newPredictionsTreat.c = predict(dataTreat_RF.c, newdata.c) #Predict Using Treatment\
+\'a0\'a0\
+\'a0 newPredictionsInfo.c = ifelse(newPredictionsControl.c>newPredictionsTreat.c, "Radiation Alone", "Radiation with Chemo")\
+\'a0 \'a0paste("Your Predicted Treatment is: ", newPredictionsInfo.c)\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \})\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 output$text.colon <- renderText(\{\
+\'a0 newdata.c <- colon[1,c(5:15)]\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 newdata.c[1,1] <- input$sex\'a0\
+\'a0 newdata.c[1,2] <- input$age\
+\'a0 newdata.c[1,3] <- input$obstruct\
+\'a0 newdata.c[1,4] <- input$perfor\
+\'a0 newdata.c[1,5] <- input$adhere\
+\'a0 newdata.c[1,6] <- input$nodes\
+\'a0 newdata.c[1,7] <- 0\
+\'a0 newdata.c[1,8] <- input$differ\
+\'a0 newdata.c[1,9] <- input$extent\
+\'a0 newdata.c[1,10] <- input$surg\
+\'a0 newdata.c[1,11] <- input$node4\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0\'a0\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 newPredictionsControl.colon <- predict(dataControl_Control, newdata.c, type = "prob")\
+\'a0 newPredictionsTreatLev.colon <- predict(dataControl_Lev, newdata.c, type = "prob")\
+\'a0 newPredictionsTreatLev5FU.colon <- predict(dataControl_Lev5FU, newdata.c, type = "prob")\
+\'a0\'a0\
+\'a0 info = data.frame(rbind(newPredictionsControl.colon, newPredictionsTreatLev.colon, newPredictionsTreatLev5FU.colon))\
+\'a0 info = cbind(info, "Treat"=c("Control", "Levamisole", "Levamisole+5-FU"))\
+\'a0 min <- as.character(info[which.min(info$Recurrence),][,3])\
+\'a0\'a0\
+# \'a0newPredictionsInfo.c = ifelse(newPredictionsControl.c>newPredictionsTreat.c, "Radiation Alone", "Radiation with Chemo")\
+\'a0 \'a0paste("Your Predicted Treatment is: ", min)\
+\})\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 ###\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \'a0 \'a0 \'a0 output$contents <- renderTable(\{\
+\'a0\'a0\
+\'a0 # input$file1 will be NULL initially. After the user selects\
+\'a0 # and uploads a file, it will be a data frame with 'name',\
+\'a0 # 'size', 'type', and 'datapath' columns. The 'datapath'\
+\'a0 # column will contain the local filenames where the data can\
+\'a0 # be found.\
+\'a0\'a0\
+\'a0 \'a0 \'a0 inFile <- input$file1\
+\'a0\'a0\
+\'a0 \'a0 \'a0 if (is.null(inFile))\
+\'a0 \'a0 \'a0 return(NULL)\
+\'a0\'a0\
+\'a0 \'a0 \'a0read.csv(inFile$datapath, header=input$header, sep=input$sep,\'a0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0quote=input$quote)\
+\'a0 \'a0 \})\
+\'a0 \'a0 src = "{\field{\*\fldinst{HYPERLINK "https://c1.staticflickr.com/1/686/32267127914_8b01152b80_k.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://c1.staticflickr.com/1/686/32267127914_8b01152b80_k.jpg}}"\
+\'a0 \'a0 src1 = "{\field{\*\fldinst{HYPERLINK "https://img.washingtonpost.com/blogs/wonkblog/files/2013/10/michelle.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://img.washingtonpost.com/blogs/wonkblog/files/2013/10/michelle.jpg}}"\
+\'a0 \'a0 src2="{\field{\*\fldinst{HYPERLINK "http://yourblackworld.net/wp-content/uploads/2012/05/22/elderly-couple.jpg"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 http://yourblackworld.net/wp-content/uploads/2012/05/22/elderly-couple.jpg}}"\
+\'a0 \'a0 src3 ="{\field{\*\fldinst{HYPERLINK "https://static1.squarespace.com/static/56e197af37013b4b09dbb4b8/t/56fea9ef4d088ed7bb3336e1/1459530245816/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 https://static1.squarespace.com/static/56e197af37013b4b09dbb4b8/t/56fea9ef4d088ed7bb3336e1/1459530245816/}}"\
+\'a0\'a0\
+\'a0 output$picture = renderText(\{c('<img src="',src,'" width = "462" height = "1366">')\})\
+\'a0 output$picture1 = renderText(\{c('<img src="',src1,'" width = "600">')\})\
+\'a0 output$picture2 = renderText(\{c('<img src="',src2,'" width = "600">')\})\
+\'a0 output$picture3 = renderText(\{c('<img src="',src3,'" width = "600">')\})\
+\'a0\'a0\
+\'a0\'a0\
+\'a0 output$userpanel <- renderUI(\{\
+\'a0 \'a0 # session$user is non-NULL only in authenticated sessions\
+\'a0 \'a0 if (!is.null(session$user)) \{\
+\'a0 \'a0 \'a0 sidebarUserPanel(\
+\'a0 \'a0 \'a0 \'a0 span("Logged in as ", session$user),\
+\'a0 \'a0 \'a0 \'a0 subtitle = a(icon("sign-out"), "Logout", href="__logout__"))\
+\'a0 \'a0 \}\
+\'a0 \})\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb1 \
+\
+\pard\pardeftab720\sl300\partightenfactor0
+\cf2 \cb3 \}\
+############################################################################################\
+# Run the application\'a0\
+############################################################################################\
+shinyApp(ui = ui, server = server, options = list(height = 1080))\
+}

@@ -1,0 +1,589 @@
+U.S. HOUSEHOLD FOOD SECURITY SURVEY MODULE: 
+
+THREE-STAGE DESIGN, WITH SCREENERS 
+
+Economic Research Service, USDA 
+
+September 2012 
+
+ 
+
+Revision Notes: The food security questions are essentially unchanged from those in the original 
+module first implemented in 1995 and described previously in this document. 
+
+September 2012: 
+
+. Corrected skip specifications in AD5 
+. Added coding specifications for “How many days” for 30-day version of AD1a and 
+AD5a. 
+
+
+July 2008: 
+
+. Wording of resource constraint in AD2 was corrected to, “…because there wasn’t 
+enough money for food” to be consistent with the intention of the September 2006 
+revision. 
+. Corrected errors in “Coding Responses” Section 
+
+
+September 2006: 
+
+. Minor changes were introduced to standardize wording of the resource constraint in most 
+questions to read, “…because there wasn't enough money for food.” 
+. Question order was changed to group the child-referenced questions following the 
+household- and adult-referenced questions. The Committee on National Statistics panel 
+that reviewed the food security measurement methods in 2004-06 recommended this 
+change to reduce cognitive burden on respondents. Conforming changes in screening 
+specifications were also made. NOTE: Question numbers were revised to reflect the new 
+question order. 
+. Follow up questions to the food sufficiency question (HH1) that were included in earlier 
+versions of the module have been omitted. 
+. User notes following the questionnaire have been revised to be consistent with current 
+practice and with new labels for ranges of food security and food insecurity introduced by 
+USDA in 2006. 
+
+
+ 
+
+Transition into Module (administered to all households): 
+
+These next questions are about the food eaten in your household in the last 12 months, since 
+(current month) of last year and whether you were able to afford the food you need. 
+
+ 
+
+ 
+
+Optional USDA Food Sufficiency Question/Screener: Question HH1 (This question is 
+optional. It is not used to calculate any of the food security scales. It may be used in 
+conjunction with income as a preliminary screener to reduce respondent burden for high 
+income households). 
+
+ 
+
+HH1. [IF ONE PERSON IN HOUSEHOLD, USE "I" IN PARENTHETICALS, OTHERWISE, 
+USE "WE."] 
+
+
+ 
+
+ Which of these statements best describes the food eaten in your household in the last 12 
+months: —enough of the kinds of food (I/we) want to eat; —enough, but not always the 
+kinds of food (I/we) want; —sometimes not enough to eat; or, —often not enough to eat? 
+
+ 
+
+ [1] Enough of the kinds of food we want to eat 
+
+ [2] Enough but not always the kinds of food we want 
+
+ [3] Sometimes not enough to eat 
+
+ [4] Often not enough to eat 
+
+ [ ] DK or Refused 
+
+
+Household Stage 1: Questions HH2-HH4 (asked of all households; begin scale items). 
+
+ 
+
+[IF SINGLE ADULT IN HOUSEHOLD, USE "I," "MY," AND “YOU” IN 
+
+PARENTHETICALS; OTHERWISE, USE "WE," "OUR," AND "YOUR HOUSEHOLD."] 
+
+ 
+
+HH2. Now I’m going to read you several statements that people have made about their food 
+situation. For these statements, please tell me whether the statement was often true, 
+sometimes true, or never true for (you/your household) in the last 12 months—that is, 
+since last (name of current month). 
+
+ 
+
+The first statement is “(I/We) worried whether (my/our) food would run out before (I/we) 
+got money to buy more.” Was that often true, sometimes true, or never true for (you/your 
+household) in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+ 
+
+HH3. “The food that (I/we) bought just didn’t last, and (I/we) didn’t have money to get more.” 
+Was that often, sometimes, or never true for (you/your household) in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+ 
+
+HH4. “(I/we) couldn’t afford to eat balanced meals.” Was that often, sometimes, or never true 
+for (you/your household) in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+ 
+
+
+Screener for Stage 2 Adult-Referenced Questions: If affirmative response (i.e., "often true" or 
+"sometimes true") to one or more of Questions HH2-HH4, OR, response [3] or [4] to question 
+HH1 (if administered), then continue to Adult Stage 2; otherwise, if children under age 18 are 
+present in the household, skip to Child Stage 1, otherwise skip to End of Food Security Module. 
+
+ 
+
+NOTE: In a sample similar to that of the general U.S. population, about 20 percent of 
+households (45 percent of households with incomes less than 185 percent of poverty line) will 
+pass this screen and continue to Adult Stage 2. 
+
+ 
+
+Adult Stage 2: Questions AD1-AD4 (asked of households passing the screener for Stage 2 
+adult-referenced questions). 
+
+ 
+
+AD1. In the last 12 months, since last (name of current month), did (you/you or other adults in 
+your household) ever cut the size of your meals or skip meals because there wasn't 
+enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No (Skip AD1a) 
+
+ [ ] DK (Skip AD1a) 
+
+ 
+
+AD1a. [IF YES ABOVE, ASK] How often did this happen—almost every month, some months 
+but not every month, or in only 1 or 2 months? 
+
+ 
+
+ [ ] Almost every month 
+
+ [ ] Some months but not every month 
+
+ [ ] Only 1 or 2 months 
+
+ [ ] DK 
+
+ 
+
+AD2. In the last 12 months, did you ever eat less than you felt you should because there wasn't 
+enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+ 
+
+AD3. In the last 12 months, were you every hungry but didn't eat because there wasn't enough 
+money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+ 
+
+
+AD4. In the last 12 months, did you lose weight because there wasn't enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+ 
+
+
+Screener for Stage 3 Adult-Referenced Questions: If affirmative response to one or more of 
+questions AD1 through AD4, then continue to Adult Stage 3; otherwise, if children under age 18 
+are present in the household, skip to Child Stage 1, otherwise skip to End of Food Security 
+Module. 
+
+ 
+
+NOTE: In a sample similar to that of the general U.S. population, about 8 percent of households 
+(20 percent of households with incomes less than 185 percent of poverty line) will pass this 
+screen and continue to Adult Stage 3. 
+
+ 
+
+Adult Stage 3: Questions AD5-AD5a (asked of households passing screener for Stage 3 
+adult-referenced questions). 
+
+ 
+
+AD5. In the last 12 months, did (you/you or other adults in your household) ever not eat for a 
+whole day because there wasn't enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No (Skip AD5a) 
+
+ [ ] DK (Skip AD5a) 
+
+ 
+
+AD5a. [IF YES ABOVE, ASK] How often did this happen—almost every month, some months 
+but not every month, or in only 1 or 2 months? 
+
+ 
+
+ [ ] Almost every month 
+
+ [ ] Some months but not every month 
+
+ [ ] Only 1 or 2 months 
+
+ [ ] DK 
+
+ 
+
+
+Child Stage 1: Questions CH1-CH3 (Transitions and questions CH1 and CH2 are 
+administered to all households with children under age 18) Households with no child under 
+age 18, skip to End of Food Security Module. 
+
+ 
+
+SELECT APPROPRIATE FILLS DEPENDING ON NUMBER OF ADULTS AND NUMBER 
+OF CHILDREN IN THE HOUSEHOLD. 
+
+ 
+
+Transition into Child-Referenced Questions: 
+
+Now I'm going to read you several statements that people have made about the food situation of 
+their children. For these statements, please tell me whether the statement was OFTEN true, 
+SOMETIMES true, or NEVER true in the last 12 months for (your child/children living in the 
+household who are under 18 years old). 
+
+ 
+
+CH1. “(I/we) relied on only a few kinds of low-cost food to feed (my/our) child/the children) 
+because (I was/we were) running out of money to buy food.” Was that often, sometimes, 
+or never true for (you/your household) in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+ 
+
+CH2. “(I/We) couldn’t feed (my/our) child/the children) a balanced meal, because (I/we) 
+couldn’t afford that.” Was that often, sometimes, or never true for (you/your household) 
+in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+ 
+
+CH3. "(My/Our child was/The children were) not eating enough because (I/we) just couldn't 
+afford enough food." Was that often, sometimes, or never true for (you/your household) 
+in the last 12 months? 
+
+ 
+
+ [ ] Often true 
+
+ [ ] Sometimes true 
+
+ [ ] Never true 
+
+ [ ] DK or Refused 
+
+
+Screener for Stage 2 Child Referenced Questions: If affirmative response (i.e., "often true" or 
+"sometimes true") to one or more of questions CH1-CH3, then continue to Child Stage 2; 
+otherwise skip to End of Food Security Module. 
+
+ 
+
+NOTE: In a sample similar to that of the general U.S. population, about 16 percent of 
+households with children (35 percent of households with children with incomes less than 185 
+percent of poverty line) will pass this screen and continue to Child Stage 2. 
+
+ 
+
+Child Stage 2: Questions CH4-CH7 (asked of households passing the screener for stage 2 
+child-referenced questions). 
+
+NOTE: In Current Population Survey Food Security Supplements, question CH6 precedes 
+question CH5. 
+
+ 
+
+CH4. In the last 12 months, since (current month) of last year, did you ever cut the size of (your 
+child's/any of the children's) meals because there wasn't enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+ 
+
+CH5. In the last 12 months, did (CHILD’S NAME/any of the children) ever skip meals because 
+there wasn't enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No (Skip CH5a) 
+
+ [ ] DK (Skip CH5a) 
+
+ 
+
+CH5a. [IF YES ABOVE ASK] How often did this happen—almost every month, some months 
+but not every month, or in only 1 or 2 months? 
+
+ 
+
+ [ ] Almost every month 
+
+ [ ] Some months but not every month 
+
+ [ ] Only 1 or 2 months 
+
+ [ ] DK 
+
+ 
+
+CH6. In the last 12 months, (was your child/were the children) ever hungry but you just 
+couldn't afford more food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+ 
+
+
+CH7. In the last 12 months, did (your child/any of the children) ever not eat for a whole day 
+because there wasn't enough money for food? 
+
+ 
+
+ [ ] Yes 
+
+ [ ] No 
+
+ [ ] DK 
+
+
+ 
+
+END OF FOOD SECURITY MODULE 
+
+User Notes 
+
+ 
+
+(1) Coding Responses and Assessing Household Food Security Status: 
+
+Following is a brief overview of how to code responses and assess household food security status 
+based on various standard scales. For detailed information on these procedures, refer to the 
+Guide to Measuring Household Food Security, Revised 2000, and Measuring Children’s Food 
+Security in U.S. Households, 1995-1999. Both publications are available through the ERS Food 
+Security in the United States Briefing Room. 
+
+ 
+
+Responses of “yes,” “often,” “sometimes,” “almost every month,” and “some months but not 
+every month” are coded as affirmative. The sum of affirmative responses to a specified set of 
+items is referred to as the household’s raw score on the scale comprising those items. 
+
+ 
+
+. Questions HH2 through CH7 comprise the U.S. Household Food Security Scale (questions 
+HH2 through AD5a for households with no child present). Specification of food security 
+status depends on raw score and whether there are children in the household (i.e., whether 
+responses to child-referenced questions are included in the raw score). 
+o For households with one or more children: 
+. Raw score zero—High food security 
+. Raw score 1-2—Marginal food security 
+. Raw score 3-7—Low food security 
+. Raw score 8-18—Very low food security 
+
+
+o For households with no child present: 
+. Raw score zero—High food security 
+. Raw score 1-2—Marginal food security 
+. Raw score 3-5—Low food security 
+. Raw score 6-10—Very low food security 
+
+
+
+
+
+
+ 
+
+Households with high or marginal food security are classified as food secure. Those with 
+low or very low food security are classified as food insecure. 
+
+ 
+
+. Questions HH2 through AD5a comprise the U.S. Adult Food Security Scale. 
+. Raw score zero—High food security among adults 
+. Raw score 1-2—Marginal food security among adults 
+. Raw score 3-5—Low food security among adults 
+. Raw score 6-10—Very low food security among adults 
+
+
+
+
+
+
+
+ 
+
+. Questions HH3 through AD3 comprise the six-item Short Module from which the Six-Item 
+Food Security Scale can be calculated. 
+. Raw score 0-1—High or marginal food security (raw score 1 may be 
+considered marginal food security, but a large proportion of households that 
+would be measured as having marginal food security using the household or 
+adult scale will have raw score zero on the six-item scale) 
+. Raw score 2-4—Low food security 
+. Raw score 5-6—Very low food security 
+
+
+
+
+
+
+ 
+
+. Questions CH1 through CH7 comprise the U.S. Children’s Food Security Scale. 
+. Raw score 0-1—High or marginal food security among children (raw score 1 
+may be considered marginal food security, but it is not certain that all 
+households with raw score zero have high food security among children 
+because the scale does not include an assessment of the anxiety component of 
+food insecurity) 
+. Raw score 2-4—Low food security among children 
+. Raw score 5-8—Very low food security among children 
+
+
+
+
+
+
+ 
+
+(2) Response Options: For interviewer-administered surveys, DK (“don’t know”) and 
+“Refused” are blind responses—that is, they are not presented as response options, but marked if 
+volunteered. For self-administered surveys, “don’t know” is presented as a response option. 
+
+ 
+
+(3) Screening: The two levels of screening for adult-referenced questions and one level for 
+child-referenced questions are provided for surveys in which it is considered important to reduce 
+respondent burden. In pilot surveys intended to validate the module in a new cultural, linguistic, 
+or survey context, screening should be avoided if possible and all questions should be 
+administered to all respondents. 
+
+ 
+
+To further reduce burden for higher income respondents, a preliminary screener may be 
+constructed using question HH1 along with a household income measure. Households with 
+income above twice the poverty threshold, AND who respond <1> to question HH1 may be 
+skipped to the end of the module and classified as food secure. Use of this preliminary screener 
+reduces total burden in a survey with many higher-income households, and the cost, in terms of 
+accuracy in identifying food-insecure households, is not great. However, research has shown that 
+a small proportion of the higher income households screened out by this procedure will register 
+food insecurity if administered the full module. If question HH1 is not needed for research 
+purposes, a preferred strategy is to omit HH1 and administer Adult Stage 1 of the module to all 
+households and Child Stage 1 of the module to all households with children. 
+
+ 
+
+
+(4) 30-Day Reference Period: The questionnaire items may be modified to a 30-day reference 
+period by changing the “last 12-month” references to “last 30 days.” In this case, items AD1a, 
+AD5a, and CH5a must be changed to read as follows: 
+
+ 
+
+AD1a/AD5a/CH5a [IF YES ABOVE, ASK] In the last 30 days, how many days did this 
+happen? 
+
+ 
+
+ ______ days 
+
+ 
+
+ [ ] DK 
+
+ 
+
+Responses of 3 days or more are coded as “affirmative” responses. 
+
+ 
+
+
